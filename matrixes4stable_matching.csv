@@ -1,0 +1,11 @@
+﻿,Gender,Capacity,1st,2nd,3rd,4th,5th
+V,M,1,B,A,D,E,C
+W,M,1,D,B,A,C,E
+X,M,1,B,E,C,D,A
+Y,M,1,A,D,C,B,E
+Z,M,1,B,D,A,E,C
+A,F,1,Z,V,W,Y,X
+B,F,1,X,W,Y,V,Z
+C,F,1,W,X,Y,Z,V
+D,F,1,V,Z,Y,X,W
+E,F,1,Y,W,Z,X,V
