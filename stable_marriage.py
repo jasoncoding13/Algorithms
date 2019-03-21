@@ -28,19 +28,18 @@ def find_matching(dict_, opt='M'):
     non_opt = non_opt[0]
     match = {e: 0 for e in list(dict_[non_opt].keys())}
     while 0 in match.values():
-        for proposer in proposers:
-            if proposer not in match.values():
-                for target in dict_[opt][proposer]['perference']:
-                        per = dict_[non_opt][target]['perference']
-                        partner = match[target]
-                        if (per.index(proposer) < per.index(partner)):
-                            match[target] = proposer
-                            if partner:
-                                print(f'{target} denies {partner}.')
-                            else:
-                                print(f'{target} is free.')
-                            print(f'{target} accepts {proposer}.')
-                            break
+        proposer = [p for p, t in zip(proposers, match.values()) if t == 0][0]
+        for target in dict_[opt][proposer]['perference']:
+            per = dict_[non_opt][target]['perference']
+            partner = match[target]
+            if (per.index(proposer) < per.index(partner)):
+                match[target] = proposer
+                if partner:
+                    print(f'{target} denies {partner}.')
+                else:
+                    print(f'{target} is free.')
+                print(f'{target} accepts {proposer}.')
+                break
     return match
 
 
