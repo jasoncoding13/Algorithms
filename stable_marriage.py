@@ -10,7 +10,7 @@ import pandas as pd
 
 
 def csv2dict():
-    df = pd.read_csv('./matrixes4stable_matching.csv', index_col=0)
+    df = pd.read_csv('./data_stable_marriage.csv', index_col=0)
     dict_ = {}
     for g in ['M', 'F']:
         dict_[g] = {}
@@ -22,36 +22,34 @@ def csv2dict():
 
 
 def find_matching(dict_, opt='M'):
-    proposers = list(dict_[opt].keys())
     non_opt = ['M', 'F']
     non_opt.remove(opt)
     non_opt = non_opt[0]
-    match = {e: 0 for e in list(dict_[non_opt].keys())}
-    while 0 in match.values():
-        proposer = [p for p, t in zip(proposers, match.values()) if t == 0][0]
+    proposers = {k: 0 for k in dict_[opt].keys()}
+    targets = {k: 0 for k in dict_[non_opt].keys()}
+    while 0 in proposers.values():
+        proposer = [k for k, v in proposers.items() if v == 0][0]
         for target in dict_[opt][proposer]['perference']:
             per = dict_[non_opt][target]['perference']
-            partner = match[target]
-            if (per.index(proposer) < per.index(partner)):
-                match[target] = proposer
-                if partner:
-                    print(f'{target} denies {partner}.')
+            proposer_ = targets[target]
+            if (per.index(proposer) < per.index(proposer_)):
+                proposers[proposer] = target
+                targets[target] = proposer
+                if proposer_:
+                    proposers[proposer_] = 0
+                    print(f'{proposer_} is denied by {target}.')
                 else:
                     print(f'{target} is free.')
-                print(f'{target} accepts {proposer}.')
+                print(f'So {proposer} is accepted by {target}.')
                 break
-    return match
-
-
-def swap_key_value(dict_):
-    dict_ = {v: k for k, v in dict_.items()}
-    return dict_
+            else:
+                print(f'{proposer} is denied by {target}.')
+    return proposers, targets
 
 
 if __name__ == '__main__':
     dict_ = csv2dict()
     opts = ['M', 'F']
     for opt in opts:
-        output = find_matching(dict_=dict_, opt=opt)
-        output = swap_key_value(output) if opt == 'F' else output
-        print(f'{opt}-optimal solution is', output)
+        print(f'{opt}-optimal solution is',
+              find_matching(dict_=dict_, opt=opt))
